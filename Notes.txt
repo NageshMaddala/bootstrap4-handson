@@ -1,0 +1,20 @@
+ctrl+, to open settings in vscode
+Emmet helps in writing the html code quickly with short cuts
+https://docs.emmet.io
+
+Bootstrap documentation is available here -
+https://getbootstrap.com/docs/4.0/getting-started/introduction/
+
+
+For free images
+unsplash.com
+
+https://plus.unsplash.com/premium_photo-1674476932935-2fc6e8a193c5?w=800&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHx8
+
+
+Bootstrap break points
+
+Padding - padding is the spacing between the border of an element and the content
+Margin - Margin is the space on the outside surrounding
+
+rem - root ems
