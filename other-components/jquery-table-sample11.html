@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery DataTable Add and View Modes</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+    <button id="toggleMode">Switch to Add Mode</button>
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>John Doe</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Jane Smith</td>
+                <td></td>
+            </tr>
+            <!-- More rows as needed -->
+        </tbody>
+    </table>
+
+    <script>
+    $(document).ready(function() {
+        let mode = 'view'; // Initial mode is view
+
+        function renderActionColumn(data, type, row, meta) {
+            if (mode === 'add') {
+                return `<select>
+                            <option value="Action1">Action1</option>
+                            <option value="Action2">Action2</option>
+                        </select>`;
+            }
+            return `<span>${data}</span>`; // Default to displaying data in view mode
+        }
+
+        // Initialize DataTable with custom renderer for the action column
+        let table = $('#example').DataTable({
+            columnDefs: [
+                {
+                    targets: 1,
+                    render: function(data, type, row, meta) {
+                        return renderActionColumn(data, type, row, meta);
+                    }
+                }
+            ]
+        });
+
+        // Handle mode toggle button
+        $('#toggleMode').click(function() {
+            mode = mode === 'view' ? 'add' : 'view';
+            $(this).text(mode === 'view' ? 'Switch to Add Mode' : 'Switch to View Mode');
+            table.rows().invalidate().draw(true); // Redraw table to apply mode changes
+        });
+    });
+    </script>
+</body>
+</html>

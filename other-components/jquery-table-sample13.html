@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTable with Dropdown</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Dropdown</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Existing rows will be populated here by DataTable -->
+        </tbody>
+    </table>
+    <button id="addRow">Add Row with Dropdown</button>
+
+    <script>
+        $(document).ready(function() {
+            // Sample JSON data
+            var jsonData = [
+                { "name": "Tiger Nixon", "position": "System Architect", "office": "Edinburgh", "dropdown": "" },
+                { "name": "Garrett Winters", "position": "Accountant", "office": "Tokyo", "dropdown": "" }
+            ];
+
+            // Initialize DataTable
+            var table = $('#example').DataTable({
+                data: jsonData,
+                columns: [
+                    { data: 'name' },
+                    { data: 'position' },
+                    { data: 'office' },
+                    {
+                        data: 'dropdown'//,
+                        // render: function(data, type, row) {
+                        //     return '<select><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option></select>';
+                        // }
+                    }
+                ]
+            });
+
+            // Add a new row with dropdown on button click
+            $('#addRow').on('click', function() {
+                table.row.add({
+                    "name": "New Name",
+                    "position": "New Position",
+                    "office": "New Office",
+                    "dropdown": '<select><option value="1">Option 1</option><option value="2">Option 2</option><option value="3">Option 3</option></select>'
+                }).draw(false);
+            });
+        });
+    </script>
+</body>
+</html>

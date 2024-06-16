@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery DataTable Add and View Modes</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tbody>
+                <tr>
+                    <td>John Doe</td>
+                    <td>10</td>
+                    <td><button class="edit-btn">Edit</button></td>
+                    <td><button class="delete-btn">Delete</button></td>
+                </tr>
+                <tr>
+                    <td>Option 2</td>
+                    <td>2</td>
+                    <td><button class="edit-btn">Edit</button></td>
+                    <td><button class="delete-btn">Delete</button></td>
+                </tr>
+    
+            </tbody>
+        </tbody>
+    </table>
+    <script>
+        // Assume modes are controlled via a global variable or state management
+        var currentMode = 'view'; // Could be 'add', 'edit', 'view'
+
+        // Initialize the DataTable
+        var table = $('#example').DataTable({
+            data: dataSet,
+            columns: [
+                {
+                    data: 'name',
+                    render: function (data, type, row, meta) {
+                        return renderCell(data, type, row, meta, 'name');
+                    }
+                },
+                {
+                    data: 'age',
+                    render: function (data, type, row, meta) {
+                        return renderCell(data, type, row, meta, 'age');
+                    }
+                },
+                // more columns...
+            ]
+        });
+
+        // Render function to handle different modes
+        function renderCell(data, type, row, meta, column) {
+            switch (currentMode) {
+                case 'view':
+                    return renderViewMode(data, column);
+                case 'edit':
+                    return renderEditMode(data, row, column);
+                case 'add':
+                    return renderAddMode(data, column);
+                default:
+                    return data; // Fallback to default
+            }
+        }
+
+        function renderViewMode(data, column) {
+            // Custom rendering for view mode
+            return `<span>${data}</span>`;
+        }
+
+        function renderEditMode(data, row, column) {
+            // Custom rendering for edit mode
+            return `<input type="text" class="form-control" value="${data}" data-row-id="${row.id}" data-column="${column}"/>`;
+        }
+
+        function renderAddMode(data, column) {
+            // Custom rendering for add mode (might be similar to edit mode)
+            return `<input type="text" class="form-control" value="" data-column="${column}"/>`;
+        }
+
+        // Event listeners for saving data in edit/add mode
+        $('#example').on('change', 'input', function () {
+            var column = $(this).data('column');
+            var rowId = $(this).data('row-id');
+            var newValue = $(this).val();
+
+            // Handle the update logic, e.g., send an AJAX request to update the data
+            updateData(rowId, column, newValue);
+        });
+
+        function updateData(rowId, column, value) {
+            // Implement your data update logic here
+            console.log(`Updating row ${rowId}, column ${column} with value ${value}`);
+        }
+
+
+    </script>
+</body>
+
+</html>
