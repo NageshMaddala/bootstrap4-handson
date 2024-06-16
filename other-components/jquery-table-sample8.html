@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery DataTable with CRUD and Dropdown</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+</head>
+
+<body>
+
+    <div style="margin: 20px;">
+        <table id="example" class="display" style="width:100%">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                    <th>Office</th>
+                    <th>Age</th>
+                    <th>Start date</th>
+                    <th>Salary</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Example row -->
+                <tr>
+                    <td>Tiger Nixon</td>
+                    <td>System Architect</td>
+                    <td>Edinburgh</td>
+                    <td>61</td>
+                    <td>2011/04/25</td>
+                    <td>$320,800</td>
+                    <td>
+                        <button class="edit-btn">Edit</button>
+                        <button class="delete-btn">Delete</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <button id="add-row-btn">Add Row</button>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#example').DataTable({
+                select: true
+            });
+
+            // Add row
+            $('#add-row-btn').on('click', function () {
+                table.row.add([
+                    '<input type="text" class="form-control" placeholder="Name">',
+                    '<select class="form-control"><option>Position 1</option><option>Position 2</option></select>',
+                    '<input type="text" class="form-control" placeholder="Office">',
+                    '<input type="number" class="form-control" placeholder="Age">',
+                    '<input type="date" class="form-control">',
+                    '<input type="text" class="form-control" placeholder="Salary">',
+                    '<button class="save-btn">Save</button> <button class="cancel-btn">Cancel</button>'
+                ]).draw(false);
+            });
+
+            // Edit row
+            $('#example tbody').on('click', '.edit-btn', function () {
+                var row = $(this).closest('tr');
+                var data = table.row(row).data();
+                var rowIndex = table.row(row).index();
+
+                // Convert row data to input fields
+                row.html(`
+            <td><input type="text" class="form-control" value="${data[0]}"></td>
+            <td>
+                <select class="form-control">
+                    <option ${data[1] === 'Position 1' ? 'selected' : ''}>Position 1</option>
+                    <option ${data[1] === 'Position 2' ? 'selected' : ''}>Position 2</option>
+                </select>
+            </td>
+            <td><input type="text" class="form-control" value="${data[2]}"></td>
+            <td><input type="number" class="form-control" value="${data[3]}"></td>
+            <td><input type="date" class="form-control" value="${data[4]}"></td>
+            <td><input type="text" class="form-control" value="${data[5]}"></td>
+            <td>
+                <button class="save-btn">Save</button>
+                <button class="cancel-btn">Cancel</button>
+            </td>
+        `);
+            });
+
+            // Save edited row
+            $('#example tbody').on('click', '.save-btn', function () {
+                var row = $(this).closest('tr');
+                var inputs = row.find('input, select');
+                var data = inputs.map(function () {
+                    return $(this).val();
+                }).get();
+                data.push('<button class="edit-btn">Edit</button> <button class="delete-btn">Delete</button>');
+                table.row(row).data(data).draw(false);
+            });
+
+            // Cancel editing row
+            $('#example tbody').on('click', '.cancel-btn', function () {
+                var row = $(this).closest('tr');
+                table.row(row).remove().draw(false);
+            });
+
+            // Delete row
+            $('#example tbody').on('click', '.delete-btn', function () {
+                table.row($(this).closest('tr')).remove().draw(false);
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DataTable Edit Row Example</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.js"></script>
+</head>
+<body>
+
+<table id="example" class="display">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Office</th>
+            <th>Age</th>
+            <th>Start date</th>
+            <th>Salary</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Tiger Nixon</td>
+            <td>System Architect</td>
+            <td>Edinburgh</td>
+            <td>61</td>
+            <td>2011/04/25</td>
+            <td>$320,800</td>
+        </tr>
+        <!-- Add more rows as needed -->
+    </tbody>
+</table>
+
+<script>
+$(document).ready(function() {
+    var table = $('#example').DataTable();
+
+    $('#example tbody').on('click', 'tr', function () {
+        var data = table.row(this).data();
+        var row = $(this);
+        
+        // Check if the row is already being edited
+        if (row.hasClass('editing')) return;
+
+        // Add editing class
+        row.addClass('editing');
+
+        // Make the cells editable
+        row.find('td').each(function(index) {
+            var cellData = $(this).text();
+            $(this).html('<input type="text" value="' + cellData + '">');
+        });
+
+        // Add save button
+        row.append('<td><button class="save-btn">Save</button></td>');
+
+        // Handle save button click
+        row.find('.save-btn').on('click', function() {
+            row.find('td').each(function(index) {
+                if (index < data.length) {
+                    var inputVal = $(this).find('input').val();
+                    data[index] = inputVal;
+                    $(this).html(inputVal);
+                }
+            });
+
+            // Remove save button
+            row.find('.save-btn').parent().remove();
+
+            // Remove editing class
+            row.removeClass('editing');
+
+            // Update the data in the DataTable
+            table.row(row).data(data).draw();
+        });
+    });
+});
+</script>
+
+</body>
+</html>

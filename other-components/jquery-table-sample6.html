@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTable with Column Visibility Dropdown</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+                <th>Edit</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="view-only">Tiger Nixon</td>
+                <td>
+                    <span class="view-only">System Architect</span>
+                    <select class="edit-mode" style="display:none;">
+                        <option value="System Architect">System Architect</option>
+                        <option value="Accountant">Accountant</option>
+                        <!-- Add more options as needed -->
+                    </select>
+                </td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011/04/25</td>
+                <td>$320,800</td>
+                <td><button class="edit-button">Edit</button></td>
+            </tr>
+            <!-- Add more rows as needed -->
+        </tbody>
+    </table>
+</body>
+<script>
+    $(document).ready(function() {
+    var table = $('#example').DataTable();
+
+    $('#example tbody').on('click', 'button.edit-button', function() {
+        var tr = $(this).closest('tr');
+        var span = tr.find('span.view-only');
+        var select = tr.find('select.edit-mode');
+
+        if ($(this).text() === 'Edit') {
+            // Switch to edit mode
+            $(this).text('Save');
+            span.hide();
+            select.val(span.text()).show();
+        } else {
+            // Save changes and switch to view-only mode
+            $(this).text('Edit');
+            span.text(select.val()).show();
+            select.hide();
+        }
+    });
+});
+
+</script>
+
+
+
+
+</html>

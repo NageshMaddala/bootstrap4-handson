@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTable with Column Visibility Dropdown</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <label for="columnSelector">Show/Hide Columns: </label>
+        <select id="columnSelector" multiple>
+        </select>
+    </div>
+
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>John Doe</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td><button class="edit-btn">Edit</button></td>
+            </tr>
+            <tr>
+                <td>Option 2</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td><button class="edit-btn">Edit</button></td>
+            </tr>
+            
+        </tbody>
+    </table>
+    
+</body>
+<script>
+    $(document).ready(function() {
+        var table = $('#example').DataTable();
+    
+        $('#example tbody').on('click', '.edit-btn', function () {
+            var row = $(this).closest('tr');
+            var rowData = table.row(row).data();
+    
+            row.find('td').each(function(index) {
+                if (index < 3) { // Assuming the first 3 columns are editable
+                    var cell = $(this);
+                    var originalValue = cell.text();
+                    cell.html('<select class="edit-dropdown"><option value="' + originalValue + '">' + originalValue + '</option><option value="Option 1">Option 1</option><option value="Option 2">Option 2</option></select>');
+                }
+            });
+            $(this).replaceWith('<button class="save-btn">Save</button>');
+        });
+    
+        $('#example tbody').on('click', '.save-btn', function () {
+            var row = $(this).closest('tr');
+            var rowData = table.row(row).data();
+    
+            row.find('td').each(function(index) {
+                if (index < 3) { // Assuming the first 3 columns are editable
+                    var cell = $(this);
+                    var selectedValue = cell.find('select.edit-dropdown').val();
+                    cell.html(selectedValue);
+                }
+            });
+            $(this).replaceWith('<button class="edit-btn">Edit</button>');
+        });
+    });
+    </script>
+    
+
+
+</html>

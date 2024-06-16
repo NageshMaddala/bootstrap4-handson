@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DataTable with Dropdowns</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+    <table id="userTable" class="display">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+            </tr>
+        </thead>
+    </table>
+
+    <script>
+        $(document).ready(function() {
+            var usersData = [
+                { username: "john_doe", email: "john@example.com", role: "User" },
+                { username: "jane_smith", email: "jane@example.com", role: "User" },
+                { username: "mike_jones", email: "mike@example.com", role: "Admin" }
+            ];
+
+            $('#userTable').DataTable({
+                data: usersData,
+                columns: [
+                    { title: "Username", data: "username" },
+                    { title: "Email", data: "email" },
+                    {
+                        title: "Role",
+                        data: "role",
+                        render: function(data, type, row, meta) {
+                            var roles = ["User", "Admin", "Guest"];
+                            var dropdown = '<select class="role-dropdown">';
+                            roles.forEach(function(role) {
+                                var selected = role === data ? ' selected' : '';
+                                dropdown += '<option value="' + role + '"' + selected + '>' + role + '</option>';
+                            });
+                            dropdown += '</select>';
+                            return dropdown;
+                        }
+                    }
+                ]
+            });
+
+            // Event listener for change events on dropdowns
+            $('#userTable tbody').on('change', 'select.role-dropdown', function() {
+                var selectedRole = $(this).val();
+                $(this).prop('disabled', true);
+                var rowData = $('#userTable').DataTable().row($(this).closest('tr')).data();
+                rowData.role = selectedRole; // Update the data source if needed
+                console.log('Role changed for', rowData.username, 'to', selectedRole);
+            });
+        });
+    </script>
+</body>
+</html>

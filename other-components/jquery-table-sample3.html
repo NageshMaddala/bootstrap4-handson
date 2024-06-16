@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTable with Column Visibility Dropdown</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <label for="columnSelector">Show/Hide Columns: </label>
+        <select id="columnSelector" multiple>
+        </select>
+    </div>
+
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>John Doe</td>
+                <td>Developer</td>
+                <td>New York</td>
+                <td><button class="edit-btn">Edit</button></td>
+            </tr>
+            <tr>
+                <td>John Doe</td>
+                <td>Developer</td>
+                <td>New York</td>
+                <td><button class="edit-btn">Edit</button></td>
+            </tr>            
+        </tbody>
+    </table>
+</body>
+<script>
+    $(document).ready(function() {
+        var table = $('#example').DataTable();
+
+        // Edit button click handler
+        $('#example tbody').on('click', 'button.edit-btn', function() {
+            var $row = $(this).closest('tr');
+            var rowData = table.row($row).data();
+
+            // Toggle edit mode
+            if ($row.hasClass('editing')) {
+                saveRow($row, rowData);
+            } else {
+                editRow($row, rowData);
+            }
+        });
+
+        function editRow($row, rowData) {
+            // Add class to mark row as editing
+            $row.addClass('editing');
+
+            // Replace text with dropdowns
+            $row.find('td').each(function(index) {
+                var $cell = $(this);
+                if (index < 3) { // Assuming the first three columns are editable
+                    var text = $cell.text();
+                    var inputHtml = '<select class="form-control">';
+                    inputHtml += '<option value="Option 1">Option 1</option>';
+                    inputHtml += '<option value="Option 2">Option 2</option>';
+                    inputHtml += '<option value="Option 3">Option 3</option>';
+                    inputHtml += '</select>';
+                    $cell.html(inputHtml);
+                    $cell.find('select').val(text); // Set the current value
+                }
+            });
+
+            // Change button text to 'Save'
+            $row.find('button.edit-btn').text('Save');
+        }
+
+        function saveRow($row, rowData) {
+            // Remove class to mark row as not editing
+            $row.removeClass('editing');
+
+            // Replace dropdowns with text
+            $row.find('td').each(function(index) {
+                var $cell = $(this);
+                if (index < 3) { // Assuming the first three columns are editable
+                    var selectValue = $cell.find('select').val();
+                    $cell.html(selectValue);
+                }
+            });
+
+            // Change button text back to 'Edit'
+            $row.find('button.edit-btn').text('Edit');
+
+            // Optionally, update the DataTable data
+            table.row($row).data($row.find('td').map(function() {
+                return $(this).text();
+            }).toArray()).draw();
+        }
+    });
+</script>
+
+
+</html>

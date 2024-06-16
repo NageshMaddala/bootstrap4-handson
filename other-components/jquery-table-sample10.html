@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>jQuery DataTable Edit Row Example</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+    <table id="example" class="display">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Link</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>2023-06-01</td>
+                <td>https://example.com</td>
+                <td>60</td>
+                <td><button class="edit-btn">Edit</button></td>
+            </tr>
+            <tr>
+                <td>2023-06-02</td>
+                <td>https://example.org</td>
+                <td>30</td>
+                <td><button class="edit-btn">Edit</button></td>
+            </tr>
+            <!-- More rows as needed -->
+        </tbody>
+    </table>
+
+    <script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        let table = $('#example').DataTable();
+
+        // Add event listener for edit buttons
+        $('#example tbody').on('click', 'button.edit-btn', function() {
+            let row = table.row($(this).closest('tr'));
+            let data = row.data();
+            let rowIndex = row.index();
+
+            // Render editable fields in the row
+            table.cell(rowIndex, 0).data('<input type="date" value="' + data[0] + '">').draw(false);
+            table.cell(rowIndex, 1).data('<input type="text" value="' + data[1] + '">').draw(false);
+            table.cell(rowIndex, 2).data('<input type="number" value="' + data[2] + '">').draw(false);
+            table.cell(rowIndex, 3).data('<button class="save-btn">Save</button>').draw(false);
+        });
+
+        // Add event listener for save buttons
+        $('#example tbody').on('click', 'button.save-btn', function() {
+            let row = table.row($(this).closest('tr'));
+            let rowIndex = row.index();
+
+            // Get values from input fields
+            let newDate = $('input[type="date"]').val();
+            let newLink = $('input[type="text"]').val();
+            let newValue = $('input[type="number"]').val();
+
+            // Update row data
+            table.cell(rowIndex, 0).data(newDate).draw(false);
+            table.cell(rowIndex, 1).data(newLink).draw(false);
+            table.cell(rowIndex, 2).data(newValue).draw(false);
+            table.cell(rowIndex, 3).data('<button class="edit-btn">Edit</button>').draw(false);
+        });
+    });
+    </script>
+</body>
+</html>

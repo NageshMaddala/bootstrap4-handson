@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTable with Column Visibility Dropdown</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <div>
+        <label for="columnSelector">Show/Hide Columns: </label>
+        <select id="columnSelector" multiple>
+        </select>
+    </div>
+
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Rows will be populated dynamically -->
+        </tbody>
+    </table>
+</body>
+<script>
+    $(document).ready(function () {
+        // Function to initialize the DataTable
+        function initializeDataTable(data) {
+            var table = $('#example').DataTable({
+                data: data,
+                columns: [
+                    { title: "Name", data: "name" },
+                    { title: "Position", data: "position" },
+                    { title: "Office", data: "office" },
+                    { title: "Age", data: "age" },
+                    { title: "Start date", data: "startDate" },
+                    { title: "Salary", data: "salary" }
+                ]
+            });
+
+            // Populate the dropdown with the column names
+            var columnNames = ['Name', 'Position', 'Office', 'Age', 'Start date', 'Salary'];
+            var columnSelector = $('#columnSelector');
+            $.each(columnNames, function (index, value) {
+                columnSelector.append('<option value="' + index + '">' + value + '</option>');
+            });
+
+            // Add event listener for dropdown change
+            columnSelector.on('change', function () {
+                var selectedColumns = $(this).val();
+                // Show all columns first
+                table.columns().visible(true);
+                // Hide the columns that are not selected
+                if (selectedColumns) {
+                    table.columns().every(function (index) {
+                        var column = table.column(index);
+                        var isSelected = selectedColumns.indexOf(index.toString()) > -1;
+                        column.visible(isSelected);
+                    });
+                }
+            });
+
+            // Initialize the dropdown with all columns selected
+            columnSelector.val(columnNames.map((_, index) => index.toString())).change();
+        }
+
+        // Fetch external data
+        $.ajax({
+            url: 'data.json',
+            method: 'GET',
+            success: function (data) {
+                initializeDataTable(data);
+            },
+            error: function () {
+                console.error('Failed to fetch external data');
+            }
+        });
+    });
+</script>
+
+</html>
