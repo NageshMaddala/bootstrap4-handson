@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>DataTable Edit Mode</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+</head>
+
+<body>
+    <table id="example" class="display" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011/04/25</td>
+                <td>$320,800</td>
+            </tr>
+            <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011/04/25</td>
+                <td>$320,800</td>
+            </tr>
+            <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011/04/25</td>
+                <td>$320,800</td>
+            </tr>
+            <tr>
+                <td>Tiger Nixon</td>
+                <td>System Architect</td>
+                <td>Edinburgh</td>
+                <td>61</td>
+                <td>2011/04/25</td>
+                <td>$320,800</td>
+            </tr>
+            <!-- More rows as needed -->
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#example').DataTable();
+            var currentEditRow = null;
+
+            function makeRowEditable(row) {
+                var data = table.row(row).data();
+                $(row).find('td').each(function (index, td) {
+                    var cellContent = $(td).text();
+
+                    if (index != 1) {
+                        $(td).html('<input type="text" value="' + cellContent + '">');
+                    }
+
+                    if(index == 1){
+                    //     var cell = $(this);
+                    // var originalValue = cell.text();
+                    // cell.html('<select class="edit-dropdown form-control"><option value="' + originalValue + '">' + originalValue + '</option><option value="Option 1">Option 1</option><option value="Option 2">Option 2</option></select>');
+                    }
+                });
+            }
+
+            function saveRow(row) {
+                var inputs = $(row).find('input, select');
+                var newData = inputs.map(function (index, input) {                    
+                    return $(input).val();
+                }).get();
+                console.log(newData);
+                table.row(row).data(newData).draw(false);
+            }
+
+            $('#example tbody').on('click', 'td', function () {
+                var row = $(this).closest('tr');
+                if (currentEditRow && currentEditRow[0] !== row[0]) {
+                    saveRow(currentEditRow);
+                }
+                if (currentEditRow && currentEditRow[0] === row[0]) {
+                    return; // If clicking on the same row, do nothing.
+                }
+                currentEditRow = row;
+                makeRowEditable(row);
+            });
+
+            // To handle the case where user clicks outside the table
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('#example').length && currentEditRow) {
+                    saveRow(currentEditRow);
+                    currentEditRow = null;
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

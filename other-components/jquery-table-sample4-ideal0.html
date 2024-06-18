@@ -13,6 +13,8 @@
 <body>
     <div>
         <button id="addRowBtn">Add Row</button>
+
+        <button id="saveData">Save Data</button>
     </div>
 
     <table id="example" class="display">
@@ -105,6 +107,53 @@
             if (row)
                 table.row($(this).parents('tr')).remove().draw();
         });
+
+        $('#saveData').click(function () {
+            var data = [];
+
+            // Iterate over each row
+            table.rows().every(function (rowIdx, tableLoop, rowLoop) {
+                var row = this.node();
+                var rowData = {};
+
+                // Iterate over each cell
+                $(row).find('td').each(function (cellIndex) {
+                    var inputElement = $(this).find('input, select');
+
+                    // Determine if the input is a textbox or dropdown
+                    if (inputElement.is('input')) {
+                        rowData[table.column(cellIndex).header().textContent] = inputElement.val();
+                    } else if (inputElement.is('select')) {
+                        rowData[table.column(cellIndex).header().textContent] = inputElement.find('option:selected').val();
+                    }
+                });
+
+                data.push(rowData);
+            });
+
+            // Convert data to JSON format
+            var jsonData = JSON.stringify(data, null, 2);
+
+            console.log(jsonData);
+
+            // // Create a Blob from the JSON string
+            // var blob = new Blob([jsonData], { type: 'application/json' });
+
+            // // Create a link element
+            // var link = document.createElement('a');
+            // link.href = window.URL.createObjectURL(blob);
+            // link.download = 'data.json';
+
+            // // Append link to the body
+            // document.body.appendChild(link);
+
+            // // Trigger the download by simulating click
+            // link.click();
+
+            // // Remove the link from the document
+            // document.body.removeChild(link);
+        });
+
     });
 </script>
 
