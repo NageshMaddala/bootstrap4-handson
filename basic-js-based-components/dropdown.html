@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dropdown Example</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <select id="dropdown1">
+        <option value="1">Option 1</option>
+        <option value="2">Option 2</option>
+        <option value="3">Option 3</option>
+    </select>
+
+    <select id="dropdown2">
+        <option value="a">Option A</option>
+        <option value="b">Option B</option>
+        <option value="c">Option C</option>
+    </select>
+
+    <script>
+        $(document).ready(function() {
+    $('#dropdown1').change(function() {
+        var selectedValue = $(this).val();
+        
+        // Enable all options first
+        $('#dropdown2 option').prop('disabled', false);
+        
+        // Disable specific options based on the selected value of the first dropdown
+        if (selectedValue == '1') {
+            $('#dropdown2 option[value="a"]').prop('disabled', true);
+        } else if (selectedValue == '2') {
+            $('#dropdown2 option[value="b"]').prop('disabled', true);
+        } else if (selectedValue == '3') {
+            $('#dropdown2 option[value="c"]').prop('disabled', true);
+        }
+        
+        // Refresh the dropdown2 to reflect the changes (optional)
+        $('#dropdown2').val('');
+    });
+});
+
+    </script>
+</body>
+</html>
